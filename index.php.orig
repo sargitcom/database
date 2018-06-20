@@ -1,0 +1,22 @@
+<?php
+
+require_once(__DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . 'autoload.php');
+
+<<<<<<< HEAD
+use KamilPietrzkiewicz\Sargit\Php\Database\Schema\Drivers\MysqlPdoQrzysio as DbDriver;
+use KamilPietrzkiewicz\Sargit\Php\Database\Schema\GetSchema as GetDbSchema;
+
+$dbDriver = new DbDriver();
+
+$dbSchema = new GetDbSchema($dbDriver);
+$dbSchema = $dbSchema->getSchema();
+
+=======
+use KamilPietrzkiewicz\Sargit\Php\Database\Schema\Get as GetDbSchema;
+
+$dbDriver = new MysqlPdoQrzysio();
+
+$dbSchema = new GetDbSchema();
+$dbSchema->getSchema();
+>>>>>>> e3f00f1970b1a058309ca13123a6fca9f4653991

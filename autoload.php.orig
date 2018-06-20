@@ -1,0 +1,38 @@
+<?php
+
+spl_autoload_register(function ($class) {
+
+    // project-specific namespace prefix
+    $prefix = 'KamilPietrzkiewicz\\Sargit\\Php\\Database\\Schema\\';
+
+    // base directory for the namespace prefix
+<<<<<<< HEAD
+    $base_dir = __DIR__ . DIRECTORY_SEPARATOR;
+=======
+    $base_dir = __DIR__ . '/src/';
+>>>>>>> e3f00f1970b1a058309ca13123a6fca9f4653991
+
+    // does the class use the namespace prefix?
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        // no, move to the next registered autoloader
+        return;
+    }
+
+    // get the relative class name
+    $relative_class = substr($class, $len);
+
+    // replace the namespace prefix with the base directory, replace namespace
+    // separators with directory separators in the relative class name, append
+    // with .php
+    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+<<<<<<< HEAD
+	
+=======
+
+>>>>>>> e3f00f1970b1a058309ca13123a6fca9f4653991
+    // if the file exists, require it
+    if (file_exists($file)) {
+        require $file;
+    }
+});
