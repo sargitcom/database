@@ -25,12 +25,16 @@ class MysqlPdoQrzysio implements DbDriver
 	) : bool {
 		$this->db = new Db();
 	}
-	
+
 	public function getSchema() : DatabaseSchemaCollection
 	{
-		//$sql = 'SHOW TABLES';
+		$sql = 'SHOW TABLES';
 		
-		//$this->db->query($sql);
+		$this->db->query($sql);
+		
+		$results = $this->db->fetch();
+		
+		print_r($results);
 		
 		
 	}
