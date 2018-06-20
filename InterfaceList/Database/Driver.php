@@ -2,6 +2,8 @@
 
 namespace KamilPietrzkiewicz\Sargit\Php\Database\Schema\InterfaceList\Database;
 
+use KamilPietrzkiewicz\Sargit\Php\Database\Schema\Collection\DatabaseSchemaCollection;
+
 interface Driver
 {
 	public function connectToDatabase(
@@ -12,5 +14,5 @@ interface Driver
 		string $password
 	) : bool;
 	
-	public function getSchema() : DatabaseSchemaCollection
+	public function getSchema() : DatabaseSchemaCollection;
 }

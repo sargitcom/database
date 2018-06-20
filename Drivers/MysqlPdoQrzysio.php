@@ -4,6 +4,12 @@ namespace KamilPietrzkiewicz\Sargit\Php\Database\Schema\Drivers;
 
 use KamilPietrzkiewicz\Sargit\Php\Database\Schema\InterfaceList\Database\Driver as DbDriver;
 
+use KamilPietrzkiewicz\Sargit\Php\Database\Schema\Collection\DatabaseSchemaCollection;
+use KamilPietrzkiewicz\Sargit\Php\Database\Schema\Collection\DatabaseRowCollection;
+
+use KamilPietrzkiewicz\Sargit\Php\Database\Schema\Resources\DatabaseTableRowResource;
+use KamilPietrzkiewicz\Sargit\Php\Database\Schema\Resources\DatabaseTableResource;
+
 class MysqlPdoQrzysio implements DbDriver 
 {
 	/**
@@ -13,7 +19,7 @@ class MysqlPdoQrzysio implements DbDriver
 	
 	public function __construct()
 	{
-		require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Configs' . DIRECTORY_SEPARATOR . 'config.php');
+		require_once(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Configs' . DIRECTORY_SEPARATOR . 'configPdoQrzysio.php');
 	}
 
 	public function connectToDatabase(
@@ -23,15 +29,81 @@ class MysqlPdoQrzysio implements DbDriver
 		string $login, 
 		string $password
 	) : bool {
-		$this->db = new Db();
+		$this->dbConnection = new \Db();
+		return true;
 	}
-	
+
 	public function getSchema() : DatabaseSchemaCollection
 	{
-		//$sql = 'SHOW TABLES';
+		$sql = 'SHOW TABLES';
 		
-		//$this->db->query($sql);
+		$this->dbConnection->query($sql);
 		
+		$results = $this->dbConnection->fetch();
 		
+		$dbSchemaCollection = new DatabaseSchemaCollection();
+		
+		if (empty($results)) {
+			return $dbSchemaCollection;
+		}
+		
+		foreach ($results as $result) {
+			$tableName = array_pop($result);
+
+			$sql = 'DESC ' . $tableName;
+			
+			$this->dbConnection->query($sql);
+			
+			$tableRows = $this->dbConnection->fetch();
+			
+			$rowsCollection = new DatabaseRowCollection();
+			
+			foreach ($tableRows as $tableRow) {
+				$tableRowResource = new DatabaseTableRowResource();
+				
+				$tableRowResource->setFieldTitle($tableRow['Field']);
+				
+				$fieldType = $this->getFieldType($tableRow['Type']);
+				
+				$tableRowResource->setFieldType($fieldType);
+				
+				$rowsCollection->append($tableRowResource);
+			}
+			
+			$dbTable = new DatabaseTableResource('$tableName', $rowsCollection);
+			
+			$dbSchemaCollection->append($dbTable);
+		}
+		
+		return $dbSchemaCollection;
+	}
+	
+	private function getFieldType($fieldType)
+	{
+		$matchResult = preg_match('/(int)/', $fieldType);
+		
+		if ($matchResult) {
+			return 'int';
+		}
+		
+		$matchResult = preg_match('/(text)/', $fieldType);
+		
+		if ($matchResult) {
+			return 'string';
+		}
+		
+		$matchResult = preg_match('/(varchar)/', $fieldType);
+		
+		if ($matchResult) {
+			return 'string';
+		}
+		
+		$matchResult = preg_match('/(timestamp)/', $fieldType);
+		
+		if ($matchResult) {
+			return 'DateTime';
+		}
+		
+		return $fieldType;
 	}
 }

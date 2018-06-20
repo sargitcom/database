@@ -2,9 +2,11 @@
 
 namespace KamilPietrzkiewicz\Sargit\Php\Database\Schema;
 
-use KamilPietrzkiewicz\Sargit\Php\Database\Schema\InterfaceList\DatabaseDriver;
+use KamilPietrzkiewicz\Sargit\Php\Database\Schema\InterfaceList\Database\Driver as DatabaseDriver;
 
-class Get
+use KamilPietrzkiewicz\Sargit\Php\Database\Schema\Collection\DatabaseSchemaCollection;
+
+class GetSchema
 {
 	/**
 	 * @var DatabaseDriver
@@ -18,6 +20,13 @@ class Get
 
 	public function getSchema() : DatabaseSchemaCollection
 	{
+		$this->dbDriver->connectToDatabase(
+			'localhost', 
+			3306,
+			'seotulip',
+			'root',
+			''
+		);
 		return $this->dbDriver->getSchema();
 	}
 }
